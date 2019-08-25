@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 
 @Component
-public class PreElapsedTimeFilter extends ZuulFilter {
+public class PostElapsedTimeFilter extends ZuulFilter {
 
-    private static Logger log = LoggerFactory.getLogger(PreElapsedTimeFilter.class);
+    private static Logger log = LoggerFactory.getLogger(PostElapsedTimeFilter.class);
 
     /**
      * Define filter type. Must return a text string according to the filter pre, post, route
@@ -22,7 +22,7 @@ public class PreElapsedTimeFilter extends ZuulFilter {
      */
     @Override
     public String filterType() {
-        return "pre";
+        return "post";
     }
 
     /**
@@ -58,9 +58,11 @@ public class PreElapsedTimeFilter extends ZuulFilter {
 
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest request = requestContext.getRequest();
-        log.info(String.format("%s routed request to %s", request.getMethod(), request.getRequestURL().toString()));
-        Long initTime = System.currentTimeMillis();
-        request.setAttribute("initTime", initTime);
+        log.info("post login");
+        Long initTime = (Long) request.getAttribute("initTime");
+        Long endTime = System.currentTimeMillis();
+        Long elapsedTime = endTime - initTime ;
+        log.info(String.format("Elapsed time in seconds %s ", elapsedTime.doubleValue() / 1000));
         return null;
     }
 }
