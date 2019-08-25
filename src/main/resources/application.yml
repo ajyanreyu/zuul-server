@@ -5,4 +5,15 @@ spring:
 server:
   port: 8090
 
+logging:
+  level:
+    com:
+      shiro: debug
+  pattern:
+    console: "%clr(${LOG_LEVEL_PATTERN:%5p})  %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
 
+#configure eureka access point
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
