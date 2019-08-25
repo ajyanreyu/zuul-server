@@ -24,12 +24,16 @@ zuul:
     product:
       service-id: product-service
       path: /api/product/**  #we map the path of products
+
     item:
       service-id: item-service
       path: /api/item/**   #we map the path of items
 
-#configure time out
+    user:
+      service-id: user-service
+      path: /api/user/**  #we map the path of user
 
+#configure time out
 hystrix:
   command:
     default:
