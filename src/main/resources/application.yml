@@ -27,3 +27,17 @@ zuul:
     item:
       service-id: item-service
       path: /api/item/**   #we map the path of items
+
+#configure time out
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          theard:
+            timeoutInMilliseconds: 20000
+
+ribbon:
+  ConnectTimeout: 3000
+  ReadTimeout: 10000
