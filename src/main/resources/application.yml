@@ -33,6 +33,12 @@ zuul:
       service-id: user-service
       path: /api/user/**  #we map the path of user
 
+    security:
+      service-id: oauth-service
+      path: /api/security/**  #we map the path of oauth
+      sensitive-headers: Cookie, Set-Cookie #delete from http header
+
+
 #configure time out
 hystrix:
   command:
