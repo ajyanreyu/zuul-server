@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: zuul-server
+
+  #Configure the access point to the configuration server
+  cloud:
+    config:
+      uri: http://localhost:8888
+management:
+  endpoints:
+    web:
+      exposure:
+        include: http://*
