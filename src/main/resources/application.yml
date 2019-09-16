@@ -36,7 +36,7 @@ zuul:
     security:
       service-id: oauth-service
       path: /api/security/**  #we map the path of oauth
-      sensitive-headers: Cookie, Set-Cookie #delete from http header
+      sensitive-headers: Cookie,Set-Cookie #delete from http header
 
 
 #configure time out

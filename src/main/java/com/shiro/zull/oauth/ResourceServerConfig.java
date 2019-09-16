@@ -21,12 +21,14 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
         http.authorizeRequests()
-                .antMatchers("/api/security/oauth/**")
-                .permitAll() // public route
-                .antMatchers(HttpMethod.GET, "/api/product/list", "api/product/item")
-                .permitAll();
+                .antMatchers("api/security/oauth/token/**").permitAll() // public route
+                .antMatchers(HttpMethod.GET, "/api/product/list", "api/product/item").permitAll()
+                .antMatchers("/api/items/details", "/api/user/user").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.POST, "/api/product", "/api/item").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/product", "/api/item").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/product", "/api/item").hasRole("ADMIN")
+                .anyRequest().authenticated();
     }
 
     @Bean
