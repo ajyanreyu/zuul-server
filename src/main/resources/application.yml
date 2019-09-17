@@ -2,6 +2,12 @@ spring:
   application:
     name: zuul-server
 
+  sleuth:
+    sampler:
+      probability: 1.0
+  zipkin:
+    base-url: http://127.0.0.1:9411/
+
 server:
   port: 8090
 
@@ -48,7 +54,8 @@ hystrix:
           theard:
             timeoutInMilliseconds: 20000
 
-ribbon:
-  ConnectTimeout: 3000
-  ReadTimeout: 10000
+#ribbon:
+#  ConnectTimeout: 3000
+#  ReadTimeout: 10000
+
 
