@@ -1,6 +1,7 @@
 package com.shiro.zull.oauth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
@@ -20,14 +21,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 @RefreshScope
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-    @Autowired
-    private Environment env;
+    @Value("${config.security.oauth.client.jwt.key}")
+    private String jwtKey;
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
@@ -92,7 +94,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter();
-        tokenConverter.setSigningKey(env.getProperty("config.security.oauth.client.client.jwt.key")); // sign the token
+        tokenConverter.setSigningKey(jwtKey); // sign the token
         return tokenConverter;
     }
 }
