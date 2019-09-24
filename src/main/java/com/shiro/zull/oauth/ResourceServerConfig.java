@@ -1,13 +1,13 @@
 package com.shiro.zull.oauth;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -21,12 +21,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 @RefreshScope
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+
+    private Logger log = LoggerFactory.getLogger(ResourceServerConfig.class);
+
 
     @Value("${config.security.oauth.client.jwt.key}")
     private String jwtKey;
@@ -39,9 +41,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
+        log.info("Configure: " + http);
         http.authorizeRequests()
-                .antMatchers("api/security/oauth/token/**").permitAll() // public route
-                .antMatchers(HttpMethod.GET, "/api/product/list", "api/product/item").permitAll()
+                .antMatchers("/api/security/oauth/token/**").permitAll() // public route
+                .antMatchers(HttpMethod.GET, "/api/product/list", "/api/product/item").permitAll()
                 .antMatchers("/api/items/details", "/api/user/user").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.POST, "/api/product", "/api/item").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/api/product", "/api/item").hasRole("ADMIN")
@@ -62,7 +65,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         corsConfig.addAllowedOrigin("*");
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfig.setAllowCredentials(true);
-        corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-type"));
+        corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
@@ -93,6 +96,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
+        log.info(jwtKey);
         JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter();
         tokenConverter.setSigningKey(jwtKey); // sign the token
         return tokenConverter;
